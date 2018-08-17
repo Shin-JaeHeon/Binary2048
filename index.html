@@ -61,94 +61,154 @@
     data: {
       score: 0,
       fail_count: 0,
-      grid: [['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', '']]
+      grid: [['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', '']],
+      gridChanged: [[false, false, false, false], [false, false, false, false], [false, false, false, false], [false, false, false, false]]
     },
     methods: {
+      scoreUp(num) {
+        this.score = this.score + num;
+      },
       up() {
-        let count = false;
-        [3, 2, 1].forEach(a => {
-          this.grid[a].forEach((v, index) => {
-            const b = this.grid[a - 1][index] !== '' ? this.grid[a - 1][index] : 0;
-            if (v !== '' && (v === b || b === 0)) {
-              this.$set(this.grid[a - 1], index, parseInt(b) + parseInt(v));
-              this.score += parseInt(b) + parseInt(v);
-              this.$set(this.grid[a], index, '');
-              count = true;
-            }
-            if (b === 0) {
-              this.$set(this.grid[a], a - 1, v);
-              this.$set(this.grid[a], a, '');
-            }
+        this.gridChanged.forEach(v => {
+          v.forEach((temp, index) => {
+            this.$set(v, index, false);
           });
         });
-        if (count = true) this.create();
-        else this.fail_count++;
+        let isChanged = false;
+        const gridKeys = Object.keys(this.grid).reverse();
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) - 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nowValue === nextValue && !this.gridChanged[parseInt(key)][index]) {
+                  const sum = parseInt(nowValue) + parseInt(nextValue);
+                  this.scoreUp(sum);
+                  this.$set(nextRow, index, sum);
+                  this.$set(row, index, '');
+                  this.$set(this.gridChanged[parseInt(key)], index, true);
+                  this.$set(this.gridChanged[parseInt(key) - 1], index, true);
+                  isChanged = true;
+                }
+              }
+            });
+          }
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) - 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            });
+          }
+        });
+        if (isChanged) this.create();
       },
       down() {
-        let count = false;
-        [0, 1, 2].forEach(a => {
-          this.grid[a].forEach((v, index) => {
-            const b = this.grid[a + 1][index] !== '' ? this.grid[a + 1][index] : 0;
-            if (v !== '' && v === b) {
-              this.$set(this.grid[a + 1], index, parseInt(b) + parseInt(v));
-              this.score += parseInt(b) + parseInt(v);
-              this.$set(this.grid[a], index, '');
-              count = true;
-            }
-            if (b === 0) {
-              this.$set(this.grid[a], a + 1, v);
-              this.$set(this.grid[a], a, '');
-            }
+        this.gridChanged.forEach(v => {
+          v.forEach((temp, index) => {
+            this.$set(v, index, false);
           });
         });
-        if (count = true) this.create();
-        else this.fail_count++;
+        let isChanged = false;
+        const gridKeys = Object.keys(this.grid);
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) < 3) {
+            const nextRow = this.grid[parseInt(key) + 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nowValue === nextValue && !this.gridChanged[parseInt(key)][index]) {
+                  const sum = parseInt(nowValue) + parseInt(nextValue);
+                  this.scoreUp(sum);
+                  this.$set(nextRow, index, sum);
+                  this.$set(row, index, '');
+                  this.$set(this.gridChanged[parseInt(key)], index, true);
+                  this.$set(this.gridChanged[parseInt(key) + 1], index, true);
+                  isChanged = true;
+                }
+              }
+            });
+          }
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) < 3) {
+            const nextRow = this.grid[parseInt(key) + 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            });
+          }
+        });
+        if (isChanged) this.create();
       },
       left() {
-        let count = false;
-        this.grid.forEach(v => {
-          [3, 2, 1].forEach(a => {
-            const b = v[a - 1] !== '' ? v[a - 1] : 0;
-            if (v[a] !== '' && v[a] === b) {
-              this.$set(v, a - 1, parseInt(b) + parseInt(v[a]));
-              this.score += parseInt(b) + parseInt(v[a]);
-              this.$set(v, a, '');
-              count = true;
-            }
-            if (b === 0) {
-              this.$set(v, a - 1, v[a]);
-              this.$set(v, a, '');
-            }
-          });
-        });
-        if (count = true) this.create();
-        else this.fail_count++;
+        // let count = false;
+        // Object.keys(this.grid).forEach((temp) => {
+        //   const index = parseInt(temp);
+        //   const arr = this.grid[index];
+        //   if (index > 0) Object.keys(arr).reverse().forEach((temp, idx) => {
+        //     let v = parseInt(arr[temp]);
+        //     const k = this.grid[index][idx - 1] === '' ? 0 : this.grid[index][idx - 1];
+        //     if (!isNaN(v) && v !== 0 && v === k) {
+        //       this.$set(this.grid[index], idx - 1, k + v);
+        //       this.$set(arr, idx, '');
+        //       count = true;
+        //     }
+        //   });
+        // });
+        // if (count = true) this.create();
+        // else this.fail_count++;
       },
       right() {
-        let count = false;
-        this.grid.forEach(v => {
-          [0, 1, 2].forEach(a => {
-            const b = v[a + 1] !== '' ? v[a + 1] : 0;
-            if (v[a] !== '' && v[a] === b) {
-              this.$set(v, a + 1, parseInt(b) + parseInt(v[a]));
-              this.score += parseInt(b) + parseInt(v[a]);
-              this.$set(v, a, '');
-              count = true;
-            }
-            if (b === 0) {
-              this.$set(v, a + 1, v[a]);
-              this.$set(v, a, '');
-            }
-          });
-        });
-        if (count = true) this.create();
-        else this.fail_count++;
+        // let count = false;
+        // Object.keys(this.grid).forEach((temp) => {
+        //   const index = parseInt(temp);
+        //   const arr = this.grid[index];
+        //   if (index < 3) Object.keys(arr).forEach((temp, idx) => {
+        //     let v = parseInt(arr[temp]);
+        //     const k = this.grid[index][idx + 1] === '' ? 0 : this.grid[index][idx + 1];
+        //     if (!isNaN(v) && v !== 0 && v === k) {
+        //       console.log(v, k);
+        //       this.$set(this.grid[index], idx + 1, k + v);
+        //       this.$set(arr, idx, '');
+        //       count = true;
+        //     }
+        //   });
+        // });
+        // if (count = true) this.create();
+        // else this.fail_count++;
       },
       onKey(event) {
         if (event.key === 'ArrowDown') this.down();
         else if (event.key === 'ArrowUp') this.up();
         else if (event.key === 'ArrowLeft') this.left();
         else if (event.key === 'ArrowRight') this.right();
+        this.score = this.grid.reduce((p, v, i) => {
+          const arrSum = v.reduce((p, v) => p + isNaN(parseInt(v)) ? 0 : parseInt(v), 0);
+          console.log(p, arrSum);
+          return p + arrSum;
+        }, 0);
       },
       create() {
         let count = 0;
@@ -159,7 +219,6 @@
           else if (random >= 8) y = 2;
           else if (random >= 4) y = 1;
           if (this.grid[y][random % 4] === '' || this.grid[y][random % 4] === 0) {
-            console.log(this.grid[y][random % 4]);
             this.$set(this.grid[y], random % 4, 2);
             break;
           }
@@ -167,6 +226,7 @@
       }
     },
     created() {
+      this.create();
       this.create();
       window.addEventListener('keydown', this.onKey)
     }
