@@ -3,39 +3,174 @@
 <head>
   <meta charset="UTF-8">
   <title>Binary 2048</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <style>
+    .grid-container {
+      font-size: 0;
+    }
+
+    .row {
+      border-radius: 10px;
+      display: block;
+      border: 5px solid #5d5a48;
+      background-color: #5d5a48;
+      font-size: 0;
+      margin-bottom: -10px;
+      width: 53rem;
+    }
+
+    .emphasis {
+      background-color: #C2EEF3 !important;
+    }
+
+    .cell {
+      border-radius: 10px;
+      vertical-align: middle;
+      display: inline-block;
+      padding: 5px;
+      font-size: 2rem;
+      margin: 0;
+      border: 5px solid #5d5a48;
+      background: #FED2D2;
+      width: 12rem;
+      color: #6D7E91;
+      height: 12rem;
+      min-width: 12rem;
+      min-height: 12rem;
+      text-align: center;
+      line-height: 12rem;
+    }
+  </style>
 </head>
 <body>
-<div class="container" id="app">
-  <div class="game-container">
-    <div class="grid-container">
-      <div class="row">
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-      </div>
-      <div class="row">
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-      </div>
-      <div class="row">
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-      </div>
-      <div class="row">
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
+<div id="app">
+  <div class="container" @keyup.up="up()" @keyup.down="down()" @keyup.left="left()" @keyup.right="right()">
+    점수 : {{ score }}
+    <div class="game-container">
+      <div class="grid-container">
+        <div class="row" v-for="item in grid">
+          <div class="cell" v-for="cell in item" :class="cell?'':'emphasis'">{{cell}}</div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 <script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      score: 0,
+      fail_count: 0,
+      grid: [['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', '']]
+    },
+    methods: {
+      up() {
+        let count = false;
+        [3, 2, 1].forEach(a => {
+          this.grid[a].forEach((v, index) => {
+            const b = this.grid[a - 1][index] !== '' ? this.grid[a - 1][index] : 0;
+            if (v !== '' && (v === b || b === 0)) {
+              this.$set(this.grid[a - 1], index, parseInt(b) + parseInt(v));
+              this.score += parseInt(b) + parseInt(v);
+              this.$set(this.grid[a], index, '');
+              count = true;
+            }
+            if (b === 0) {
+              this.$set(this.grid[a], a - 1, v);
+              this.$set(this.grid[a], a, '');
+            }
+          });
+        });
+        if (count = true) this.create();
+        else this.fail_count++;
+      },
+      down() {
+        let count = false;
+        [0, 1, 2].forEach(a => {
+          this.grid[a].forEach((v, index) => {
+            const b = this.grid[a + 1][index] !== '' ? this.grid[a + 1][index] : 0;
+            if (v !== '' && v === b) {
+              this.$set(this.grid[a + 1], index, parseInt(b) + parseInt(v));
+              this.score += parseInt(b) + parseInt(v);
+              this.$set(this.grid[a], index, '');
+              count = true;
+            }
+            if (b === 0) {
+              this.$set(this.grid[a], a + 1, v);
+              this.$set(this.grid[a], a, '');
+            }
+          });
+        });
+        if (count = true) this.create();
+        else this.fail_count++;
+      },
+      left() {
+        let count = false;
+        this.grid.forEach(v => {
+          [3, 2, 1].forEach(a => {
+            const b = v[a - 1] !== '' ? v[a - 1] : 0;
+            if (v[a] !== '' && v[a] === b) {
+              this.$set(v, a - 1, parseInt(b) + parseInt(v[a]));
+              this.score += parseInt(b) + parseInt(v[a]);
+              this.$set(v, a, '');
+              count = true;
+            }
+            if (b === 0) {
+              this.$set(v, a - 1, v[a]);
+              this.$set(v, a, '');
+            }
+          });
+        });
+        if (count = true) this.create();
+        else this.fail_count++;
+      },
+      right() {
+        let count = false;
+        this.grid.forEach(v => {
+          [0, 1, 2].forEach(a => {
+            const b = v[a + 1] !== '' ? v[a + 1] : 0;
+            if (v[a] !== '' && v[a] === b) {
+              this.$set(v, a + 1, parseInt(b) + parseInt(v[a]));
+              this.score += parseInt(b) + parseInt(v[a]);
+              this.$set(v, a, '');
+              count = true;
+            }
+            if (b === 0) {
+              this.$set(v, a + 1, v[a]);
+              this.$set(v, a, '');
+            }
+          });
+        });
+        if (count = true) this.create();
+        else this.fail_count++;
+      },
+      onKey(event) {
+        if (event.key === 'ArrowDown') this.down();
+        else if (event.key === 'ArrowUp') this.up();
+        else if (event.key === 'ArrowLeft') this.left();
+        else if (event.key === 'ArrowRight') this.right();
+      },
+      create() {
+        let count = 0;
+        while (count++ <= 16) {
+          const random = Math.floor(Math.random() * 16) % 16;
+          let y = 0;
+          if (random >= 12) y = 3;
+          else if (random >= 8) y = 2;
+          else if (random >= 4) y = 1;
+          if (this.grid[y][random % 4] === '' || this.grid[y][random % 4] === 0) {
+            console.log(this.grid[y][random % 4]);
+            this.$set(this.grid[y], random % 4, 2);
+            break;
+          }
+        }
+      }
+    },
+    created() {
+      this.create();
+      window.addEventListener('keydown', this.onKey)
+    }
+  });
 </script>
 </body>
 </html>
