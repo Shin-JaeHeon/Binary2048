@@ -4,19 +4,77 @@
   <meta charset="UTF-8">
   <title>Binary 2048</title>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Audiowide" rel="stylesheet">
   <style>
     .grid-container {
       font-size: 0;
     }
 
-    .row {
+    body {
+      font-family: 'Audiowide', cursive;
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+    }
+
+    .container {
+      margin: auto;
+
+    }
+
+    .level-10 {
+
+      background: #90fea7 !important;
+    }
+
+    .level-100 {
+
+      background: #febb86 !important;
+    }
+
+    .level-1000 {
+
+      background: #feaad9 !important;
+    }
+
+    .head-container {
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 4rem;
+    }
+
+    .game-container {
+      margin: 20px;
+    }
+
+    .score-container {
+      float: right;
+      text-align: center;
+      border: 8px solid #5d5a48;
+      padding: 20px;
       border-radius: 10px;
+      min-width: 6rem;
+    }
+
+    .score-title {
+      font-size: 1.5rem;
+    }
+
+    .score {
+      font-size: 2rem;
+    }
+
+    .row {
+      /*border-radius: 10px;*/
       display: block;
       border: 5px solid #5d5a48;
       background-color: #5d5a48;
       font-size: 0;
       margin-bottom: -10px;
-      width: 53rem;
+      /*width: 53rem;*/
+      width: 105rem;
     }
 
     .emphasis {
@@ -24,6 +82,7 @@
     }
 
     .cell {
+      font-weight: 900;
       border-radius: 10px;
       vertical-align: middle;
       display: inline-block;
@@ -32,24 +91,33 @@
       margin: 0;
       border: 5px solid #5d5a48;
       background: #FED2D2;
-      width: 12rem;
+      width: 25rem;
       color: #6D7E91;
-      height: 12rem;
-      min-width: 12rem;
-      min-height: 12rem;
+      height: 10rem;
+      min-width: 25rem;
+      min-height: 10rem;
       text-align: center;
-      line-height: 12rem;
+      line-height: 10rem;
     }
   </style>
 </head>
 <body>
 <div id="app">
   <div class="container" @keyup.up="up()" @keyup.down="down()" @keyup.left="left()" @keyup.right="right()">
-    점수 : {{ score }}
+    <div class="head-container">
+      <h1 style="display:inline-block;">Binary2048</h1>
+      <div class="score-container">
+        <div class="score-title">Score</div>
+        <div class="score">{{ score }}</div>
+      </div>
+    </div>
     <div class="game-container">
       <div class="grid-container">
         <div class="row" v-for="item in grid">
-          <div class="cell" v-for="cell in item" :class="cell?'':'emphasis'">{{cell}}</div>
+          <div class="cell" v-for="cell in item"
+               :class="[cell!==''?(parseInt(cell)<10?'':(parseInt(cell)<100?'level-10':(parseInt(cell)<1000?'level-100':'level-1000'))):'emphasis']">
+            <span style="max-width:25rem;word-wrap: break-word;">{{cell.toString(2)}}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -65,16 +133,12 @@
       gridChanged: [[false, false, false, false], [false, false, false, false], [false, false, false, false], [false, false, false, false]]
     },
     methods: {
-      scoreUp(num) {
-        this.score = this.score + num;
-      },
       up() {
         this.gridChanged.forEach(v => {
           v.forEach((temp, index) => {
             this.$set(v, index, false);
           });
         });
-        let isChanged = false;
         const gridKeys = Object.keys(this.grid).reverse();
         gridKeys.forEach(key => {
           const row = this.grid[key];
@@ -84,14 +148,9 @@
               let nowValue = v;
               let nextValue = nextRow[index];
               if (nowValue !== '') {
-                if (nowValue === nextValue && !this.gridChanged[parseInt(key)][index]) {
-                  const sum = parseInt(nowValue) + parseInt(nextValue);
-                  this.scoreUp(sum);
-                  this.$set(nextRow, index, sum);
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
                   this.$set(row, index, '');
-                  this.$set(this.gridChanged[parseInt(key)], index, true);
-                  this.$set(this.gridChanged[parseInt(key) - 1], index, true);
-                  isChanged = true;
                 }
               }
             });
@@ -113,32 +172,17 @@
             });
           }
         });
-        if (isChanged) this.create();
-      },
-      down() {
-        this.gridChanged.forEach(v => {
-          v.forEach((temp, index) => {
-            this.$set(v, index, false);
-          });
-        });
-        let isChanged = false;
-        const gridKeys = Object.keys(this.grid);
         gridKeys.forEach(key => {
           const row = this.grid[key];
-          if (parseInt(key) < 3) {
-            const nextRow = this.grid[parseInt(key) + 1];
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) - 1];
             row.forEach((v, index) => {
               let nowValue = v;
               let nextValue = nextRow[index];
               if (nowValue !== '') {
-                if (nowValue === nextValue && !this.gridChanged[parseInt(key)][index]) {
-                  const sum = parseInt(nowValue) + parseInt(nextValue);
-                  this.scoreUp(sum);
-                  this.$set(nextRow, index, sum);
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
                   this.$set(row, index, '');
-                  this.$set(this.gridChanged[parseInt(key)], index, true);
-                  this.$set(this.gridChanged[parseInt(key) + 1], index, true);
-                  isChanged = true;
                 }
               }
             });
@@ -146,7 +190,84 @@
         });
         gridKeys.forEach(key => {
           const row = this.grid[key];
-          if (parseInt(key) < 3) {
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) - 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nowValue === nextValue && !this.gridChanged[parseInt(key)][index]) {
+                  const sum = parseInt(nowValue) + (isNaN(parseInt(nextValue)) ? 0 : parseInt(nextValue));
+                  this.score += sum;
+                  this.$set(nextRow, index, sum);
+                  this.$set(row, index, '');
+                  this.$set(this.gridChanged[parseInt(key)], index, true);
+                  this.$set(this.gridChanged[parseInt(key) - 1], index, true);
+                }
+              }
+            });
+          }
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) - 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            });
+          }
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) - 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            });
+          }
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) - 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            });
+          }
+        });
+        this.create();
+      },
+      down() {
+        this.gridChanged.forEach(v => {
+          v.forEach((temp, index) => {
+            this.$set(v, index, false);
+          });
+        });
+        const gridKeys = Object.keys(this.grid);
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) > 0) {
             const nextRow = this.grid[parseInt(key) + 1];
             row.forEach((v, index) => {
               let nowValue = v;
@@ -160,55 +281,365 @@
             });
           }
         });
-        if (isChanged) this.create();
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) + 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            });
+          }
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) + 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            });
+          }
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) < 3) {
+            const nextRow = this.grid[parseInt(key) + 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nowValue === nextValue && !this.gridChanged[parseInt(key)][index]) {
+                  const sum = parseInt(nowValue) + (isNaN(parseInt(nextValue)) ? 0 : parseInt(nextValue));
+                  this.score += sum;
+                  this.$set(nextRow, index, sum);
+                  this.$set(row, index, '');
+                  this.$set(this.gridChanged[parseInt(key)], index, true);
+                  this.$set(this.gridChanged[parseInt(key) + 1], index, true);
+                }
+              }
+            });
+          }
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) + 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            });
+          }
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) + 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            });
+          }
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          if (parseInt(key) > 0) {
+            const nextRow = this.grid[parseInt(key) + 1];
+            row.forEach((v, index) => {
+              let nowValue = v;
+              let nextValue = nextRow[index];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(nextRow, index, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            });
+          }
+        });
+        this.create();
       },
       left() {
-        // let count = false;
-        // Object.keys(this.grid).forEach((temp) => {
-        //   const index = parseInt(temp);
-        //   const arr = this.grid[index];
-        //   if (index > 0) Object.keys(arr).reverse().forEach((temp, idx) => {
-        //     let v = parseInt(arr[temp]);
-        //     const k = this.grid[index][idx - 1] === '' ? 0 : this.grid[index][idx - 1];
-        //     if (!isNaN(v) && v !== 0 && v === k) {
-        //       this.$set(this.grid[index], idx - 1, k + v);
-        //       this.$set(arr, idx, '');
-        //       count = true;
-        //     }
-        //   });
-        // });
-        // if (count = true) this.create();
-        // else this.fail_count++;
+        this.gridChanged.forEach(v => {
+          v.forEach((temp, index) => {
+            this.$set(v, index, false);
+          });
+        });
+        const gridKeys = Object.keys(this.grid);
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) > 0) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index - 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index - 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) > 0) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index - 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index - 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) > 0) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index - 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index - 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) > 0) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index - 1];
+              if (nowValue !== '') {
+                if (nowValue === nextValue && !this.gridChanged[parseInt(key)][index]) {
+                  const sum = parseInt(nowValue) + (isNaN(parseInt(nextValue)) ? 0 : parseInt(nextValue));
+                  this.score += sum;
+                  this.$set(row, index - 1, sum);
+                  this.$set(row, index, '');
+                  this.$set(this.gridChanged[parseInt(key)], index - 1, true);
+                  this.$set(this.gridChanged[parseInt(key)], index, true);
+                }
+
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) > 0) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index - 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index - 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) > 0) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index - 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index - 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) > 0) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index - 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index - 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        this.create();
       },
       right() {
-        // let count = false;
-        // Object.keys(this.grid).forEach((temp) => {
-        //   const index = parseInt(temp);
-        //   const arr = this.grid[index];
-        //   if (index < 3) Object.keys(arr).forEach((temp, idx) => {
-        //     let v = parseInt(arr[temp]);
-        //     const k = this.grid[index][idx + 1] === '' ? 0 : this.grid[index][idx + 1];
-        //     if (!isNaN(v) && v !== 0 && v === k) {
-        //       console.log(v, k);
-        //       this.$set(this.grid[index], idx + 1, k + v);
-        //       this.$set(arr, idx, '');
-        //       count = true;
-        //     }
-        //   });
-        // });
-        // if (count = true) this.create();
-        // else this.fail_count++;
+        this.gridChanged.forEach(v => {
+          v.forEach((temp, index) => {
+            this.$set(v, index, false);
+          });
+        });
+        const gridKeys = Object.keys(this.grid);
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) < 3) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index + 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index + 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) < 3) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index + 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index + 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) < 3) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index + 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index + 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) < 3) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index + 1];
+              if (nowValue !== '') {
+                if (nowValue === nextValue && !this.gridChanged[parseInt(key)][index]) {
+                  const sum = parseInt(nowValue) + (isNaN(parseInt(nextValue)) ? 0 : parseInt(nextValue));
+                  this.score += sum;
+                  this.$set(row, index + 1, sum);
+                  this.$set(row, index, '');
+                  this.$set(this.gridChanged[parseInt(key)], index + 1, true);
+                  this.$set(this.gridChanged[parseInt(key)], index, true);
+                }
+
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) < 3) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index + 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index + 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) < 3) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index + 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index + 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        gridKeys.forEach(key => {
+          const row = this.grid[key];
+          Object.keys(row).reverse().forEach(v => {
+            if (parseInt(v) < 3) {
+              const index = parseInt(v);
+              let nowValue = row[v];
+              let nextValue = row[index + 1];
+              if (nowValue !== '') {
+                if (nextValue === '') {
+                  this.$set(row, index + 1, nowValue);
+                  this.$set(row, index, '');
+                }
+              }
+            }
+          });
+        });
+        this.create();
       },
       onKey(event) {
         if (event.key === 'ArrowDown') this.down();
         else if (event.key === 'ArrowUp') this.up();
         else if (event.key === 'ArrowLeft') this.left();
         else if (event.key === 'ArrowRight') this.right();
-        this.score = this.grid.reduce((p, v, i) => {
-          const arrSum = v.reduce((p, v) => p + isNaN(parseInt(v)) ? 0 : parseInt(v), 0);
-          console.log(p, arrSum);
-          return p + arrSum;
-        }, 0);
       },
       create() {
         let count = 0;
@@ -219,7 +650,7 @@
           else if (random >= 8) y = 2;
           else if (random >= 4) y = 1;
           if (this.grid[y][random % 4] === '' || this.grid[y][random % 4] === 0) {
-            this.$set(this.grid[y], random % 4, 2);
+            this.$set(this.grid[y], random % 4, Math.random() < 0.9 ? 2 : 4);
             break;
           }
         }
