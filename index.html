@@ -146,7 +146,7 @@
           });
         });
         const gridKeys = Object.keys(this.grid).reverse();
-        gridKeys.forEach(key => {
+        [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
           if (parseInt(key) > 0) {
             const nextRow = this.grid[parseInt(key) - 1];
@@ -161,39 +161,7 @@
               }
             });
           }
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          if (parseInt(key) > 0) {
-            const nextRow = this.grid[parseInt(key) - 1];
-            row.forEach((v, index) => {
-              let nowValue = v;
-              let nextValue = nextRow[index];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(nextRow, index, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            });
-          }
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          if (parseInt(key) > 0) {
-            const nextRow = this.grid[parseInt(key) - 1];
-            row.forEach((v, index) => {
-              let nowValue = v;
-              let nextValue = nextRow[index];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(nextRow, index, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            });
-          }
-        });
+        }));
         gridKeys.forEach(key => {
           const row = this.grid[key];
           if (parseInt(key) > 0) {
@@ -214,7 +182,7 @@
             });
           }
         });
-        gridKeys.forEach(key => {
+        [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
           if (parseInt(key) > 0) {
             const nextRow = this.grid[parseInt(key) - 1];
@@ -229,39 +197,7 @@
               }
             });
           }
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          if (parseInt(key) > 0) {
-            const nextRow = this.grid[parseInt(key) - 1];
-            row.forEach((v, index) => {
-              let nowValue = v;
-              let nextValue = nextRow[index];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(nextRow, index, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            });
-          }
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          if (parseInt(key) > 0) {
-            const nextRow = this.grid[parseInt(key) - 1];
-            row.forEach((v, index) => {
-              let nowValue = v;
-              let nextValue = nextRow[index];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(nextRow, index, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            });
-          }
-        });
+        }));
         this.create();
       },
       down() {
@@ -271,7 +207,7 @@
           });
         });
         const gridKeys = Object.keys(this.grid);
-        gridKeys.forEach(key => {
+        [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
           if (parseInt(key) > 0) {
             const nextRow = this.grid[parseInt(key) + 1];
@@ -286,39 +222,7 @@
               }
             });
           }
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          if (parseInt(key) > 0) {
-            const nextRow = this.grid[parseInt(key) + 1];
-            row.forEach((v, index) => {
-              let nowValue = v;
-              let nextValue = nextRow[index];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(nextRow, index, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            });
-          }
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          if (parseInt(key) > 0) {
-            const nextRow = this.grid[parseInt(key) + 1];
-            row.forEach((v, index) => {
-              let nowValue = v;
-              let nextValue = nextRow[index];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(nextRow, index, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            });
-          }
-        });
+        }));
         gridKeys.forEach(key => {
           const row = this.grid[key];
           if (parseInt(key) < 3) {
@@ -339,7 +243,7 @@
             });
           }
         });
-        gridKeys.forEach(key => {
+        [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
           if (parseInt(key) > 0) {
             const nextRow = this.grid[parseInt(key) + 1];
@@ -354,39 +258,7 @@
               }
             });
           }
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          if (parseInt(key) > 0) {
-            const nextRow = this.grid[parseInt(key) + 1];
-            row.forEach((v, index) => {
-              let nowValue = v;
-              let nextValue = nextRow[index];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(nextRow, index, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            });
-          }
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          if (parseInt(key) > 0) {
-            const nextRow = this.grid[parseInt(key) + 1];
-            row.forEach((v, index) => {
-              let nowValue = v;
-              let nextValue = nextRow[index];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(nextRow, index, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            });
-          }
-        });
+        }));
         this.create();
       },
       left() {
@@ -396,7 +268,7 @@
           });
         });
         const gridKeys = Object.keys(this.grid);
-        gridKeys.forEach(key => {
+        [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
           Object.keys(row).reverse().forEach(v => {
             if (parseInt(v) > 0) {
@@ -411,39 +283,7 @@
               }
             }
           });
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          Object.keys(row).reverse().forEach(v => {
-            if (parseInt(v) > 0) {
-              const index = parseInt(v);
-              let nowValue = row[v];
-              let nextValue = row[index - 1];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(row, index - 1, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            }
-          });
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          Object.keys(row).reverse().forEach(v => {
-            if (parseInt(v) > 0) {
-              const index = parseInt(v);
-              let nowValue = row[v];
-              let nextValue = row[index - 1];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(row, index - 1, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            }
-          });
-        });
+        }));
         gridKeys.forEach(key => {
           const row = this.grid[key];
           Object.keys(row).reverse().forEach(v => {
@@ -465,7 +305,7 @@
             }
           });
         });
-        gridKeys.forEach(key => {
+        [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
           Object.keys(row).reverse().forEach(v => {
             if (parseInt(v) > 0) {
@@ -480,39 +320,7 @@
               }
             }
           });
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          Object.keys(row).reverse().forEach(v => {
-            if (parseInt(v) > 0) {
-              const index = parseInt(v);
-              let nowValue = row[v];
-              let nextValue = row[index - 1];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(row, index - 1, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            }
-          });
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          Object.keys(row).reverse().forEach(v => {
-            if (parseInt(v) > 0) {
-              const index = parseInt(v);
-              let nowValue = row[v];
-              let nextValue = row[index - 1];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(row, index - 1, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            }
-          });
-        });
+        }));
         this.create();
       },
       right() {
@@ -522,7 +330,7 @@
           });
         });
         const gridKeys = Object.keys(this.grid);
-        gridKeys.forEach(key => {
+        [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
           Object.keys(row).reverse().forEach(v => {
             if (parseInt(v) < 3) {
@@ -537,39 +345,7 @@
               }
             }
           });
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          Object.keys(row).reverse().forEach(v => {
-            if (parseInt(v) < 3) {
-              const index = parseInt(v);
-              let nowValue = row[v];
-              let nextValue = row[index + 1];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(row, index + 1, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            }
-          });
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          Object.keys(row).reverse().forEach(v => {
-            if (parseInt(v) < 3) {
-              const index = parseInt(v);
-              let nowValue = row[v];
-              let nextValue = row[index + 1];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(row, index + 1, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            }
-          });
-        });
+        }));
         gridKeys.forEach(key => {
           const row = this.grid[key];
           Object.keys(row).reverse().forEach(v => {
@@ -591,7 +367,7 @@
             }
           });
         });
-        gridKeys.forEach(key => {
+        [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
           Object.keys(row).reverse().forEach(v => {
             if (parseInt(v) < 3) {
@@ -606,39 +382,7 @@
               }
             }
           });
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          Object.keys(row).reverse().forEach(v => {
-            if (parseInt(v) < 3) {
-              const index = parseInt(v);
-              let nowValue = row[v];
-              let nextValue = row[index + 1];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(row, index + 1, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            }
-          });
-        });
-        gridKeys.forEach(key => {
-          const row = this.grid[key];
-          Object.keys(row).reverse().forEach(v => {
-            if (parseInt(v) < 3) {
-              const index = parseInt(v);
-              let nowValue = row[v];
-              let nextValue = row[index + 1];
-              if (nowValue !== '') {
-                if (nextValue === '') {
-                  this.$set(row, index + 1, nowValue);
-                  this.$set(row, index, '');
-                }
-              }
-            }
-          });
-        });
+        }));
         this.create();
       },
       onKey(event) {
