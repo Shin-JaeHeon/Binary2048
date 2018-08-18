@@ -122,9 +122,13 @@
         <div class="score-title">Best</div>
         <div class="score">{{ best }}</div>
       </div>
-      <div class="score-container">
+      <div class="score-container" style="margin-left:25px;">
         <div class="score-title">Score</div>
         <div class="score">{{ score }}</div>
+      </div>
+      <div class="score-container" style="margin-left:25px;width:8rem;">
+        <div class="score-title">Time</div>
+        <div class="score">{{ timeStr }}</div>
       </div>
     </div>
     <div class="game-container">
@@ -138,7 +142,6 @@
       </div>
     </div>
   </div>
-
 </div>
 <div style="margin:auto;display: flex;justify-content: center; width:105rem;">
   <span style="">Github : <a href="https://github.com/Shin-JaeHeon/Binary2048">https://github.com/Shin-JaeHeon/Binary2048</a></span>
@@ -155,6 +158,8 @@
       score: 0,
       best: localStorage.getItem('best'),
       fail_count: 4,
+      time: null,
+      timeStr: `00:00`,
       gameOver: false,
       grid: [['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', '']],
       gridChanged: [[false, false, false, false], [false, false, false, false], [false, false, false, false], [false, false, false, false]]
@@ -391,6 +396,7 @@
       },
       onKey(event) {
         if (event.key.includes('Arrow')) {
+          if (this.time === null) this.time = new Date();
           if (event.key === 'ArrowDown') this.down();
           else if (event.key === 'ArrowUp') this.up();
           else if (event.key === 'ArrowLeft') this.left();
@@ -498,6 +504,10 @@
       this.best = localStorage.getItem('best');
       this.create();
       this.create();
+      setInterval(() => {
+        const zero = num => num < 10 && num >= 0 ? "0" + num : num;
+        this.timeStr = !this.time ? `00:00` : `${zero(Math.floor((new Date() - this.time) / 1000 / 60))}:${zero(Math.floor((new Date() - this.time) / 1000 % 60))}`;
+      }, 1000);
       window.addEventListener('keydown', this.onKey);
     }
   });
