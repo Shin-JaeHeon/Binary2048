@@ -143,11 +143,7 @@
     },
     methods: {
       up() {
-        this.gridChanged.forEach(v => {
-          v.forEach((temp, index) => {
-            this.$set(v, index, false);
-          });
-        });
+        this.gridChanged.forEach(v => v.forEach((temp, index) => this.$set(v, index, false)));
         const gridKeys = Object.keys(this.grid).reverse();
         [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
@@ -204,11 +200,7 @@
         }));
       },
       down() {
-        this.gridChanged.forEach(v => {
-          v.forEach((temp, index) => {
-            this.$set(v, index, false);
-          });
-        });
+        this.gridChanged.forEach(v => v.forEach((temp, index) => this.$set(v, index, false)));
         const gridKeys = Object.keys(this.grid);
         [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
@@ -265,11 +257,7 @@
         }));
       },
       left() {
-        this.gridChanged.forEach(v => {
-          v.forEach((temp, index) => {
-            this.$set(v, index, false);
-          });
-        });
+        this.gridChanged.forEach(v => v.forEach((temp, index) => this.$set(v, index, false)));
         const gridKeys = Object.keys(this.grid);
         [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
@@ -326,11 +314,7 @@
         }));
       },
       right() {
-        this.gridChanged.forEach(v => {
-          v.forEach((temp, index) => {
-            this.$set(v, index, false);
-          });
-        });
+        this.gridChanged.forEach(v => v.forEach((temp, index) => this.$set(v, index, false)));
         const gridKeys = Object.keys(this.grid);
         [0, 0, 0].forEach(() => gridKeys.forEach(key => {
           const row = this.grid[key];
