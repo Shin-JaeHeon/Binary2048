@@ -5,16 +5,27 @@
   <title>Binary 2048</title>
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Audiowide" rel="stylesheet">
+  <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
   <style>
     .grid-container {
       font-size: 0;
     }
 
+    a {
+      text-decoration: none;
+      color: #6D7E91;
+    }
+
     body {
+
       font-family: 'Audiowide', cursive;
+      margin: 20px;
+    }
+
+    #app {
       display: flex;
       justify-content: center;
-      margin: 20px;
     }
 
     .container {
@@ -105,7 +116,7 @@
 <div id="app">
   <div class="container" @keyup.up="up()" @keyup.down="down()" @keyup.left="left()" @keyup.right="right()">
     <div class="head-container">
-      <h1 style="display:inline-block;">{{gameOver?'GAME OVER!':'Binary2048'}}</h1>
+      <h1 style="display:inline-block;">{{gameOver?'GAME OVER!':'Binary 2048'}}</h1>
       <div class="score-container" style="margin-left:25px;height:4.5rem;" @click="restart()">
         <div class="score-title" style="line-height: 4.5rem">RESTART</div>
       </div>
@@ -123,13 +134,42 @@
         <div class="row" v-for="item in grid">
           <div class="cell" v-for="cell in item"
                :class="[cell!==''?(parseInt(cell)<10?'':(parseInt(cell)<100?'level-10':(parseInt(cell)<1000?'level-100':'level-1000'))):'emphasis']">
-            <span style="max-width:25rem;word-wrap: break-word;">{{cell}}</span>
+            <span style="max-width:25rem;word-wrap: break-word;">{{cell.toString(2)}}</span>
           </div>
         </div>
       </div>
     </div>
   </div>
+
 </div>
+<div style="margin:auto;display: flex;justify-content: center; width:105rem;">
+  <span style="">Github : <a href="https://github.com/Shin-JaeHeon/Binary2048">https://github.com/Shin-JaeHeon/Binary2048</a></span>
+  <br>
+  <span style="margin-left:10rem;margin-right:10rem;">License <a
+    href="https://github.com/Shin-JaeHeon/Binary2048/blob/master/LICENSE">GPLv3</a></span>
+  <br>
+  <span style="">Font : Audiowide(Designer : Astigmatic) <a href="https://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL_web">Open Font License</a></span>
+</div>
+<!-- letscoding.kr -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9624506653839428"
+     data-ad-slot="8992508136"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+<!-- letscoding.kr -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9624506653839428"
+     data-ad-slot="8992508136"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 <script>
   const app = new Vue({
     el: '#app',
@@ -378,8 +418,7 @@
           else if (event.key === 'ArrowLeft') this.left();
           else if (event.key === 'ArrowRight') this.right();
           const best = localStorage.getItem('best');
-          const temp = best => best ? best < this.score : true;
-          if (temp(best)) localStorage.setItem('best', this.score);
+          if (best < this.score) localStorage.setItem('best', this.score);
           this.best = localStorage.getItem('best');
           if (this.check()) this.create();
           else {
@@ -476,6 +515,9 @@
     },
     created() {
       this.gameOver = false;
+      const best = localStorage.getItem('best');
+      if (!best) localStorage.setItem('best', 0);
+      this.best = localStorage.getItem('best');
       this.create();
       this.create();
       window.addEventListener('keydown', this.onKey);
