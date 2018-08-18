@@ -106,10 +106,15 @@
   <div class="container" @keyup.up="up()" @keyup.down="down()" @keyup.left="left()" @keyup.right="right()">
     <div class="head-container">
       <h1 style="display:inline-block;">Binary2048</h1>
+      <div class="score-container" style="margin-left:25px;">
+        <div class="score-title">Best</div>
+        <div class="score">{{ best }}</div>
+      </div>
       <div class="score-container">
         <div class="score-title">Score</div>
         <div class="score">{{ score }}</div>
       </div>
+
     </div>
     <div class="game-container">
       <div class="grid-container">
@@ -128,6 +133,7 @@
     el: '#app',
     data: {
       score: 0,
+      best: localStorage.getItem('best'),
       fail_count: 0,
       grid: [['', '', '', ''], ['', '', '', ''], ['', '', '', ''], ['', '', '', '']],
       gridChanged: [[false, false, false, false], [false, false, false, false], [false, false, false, false], [false, false, false, false]]
@@ -640,6 +646,10 @@
         else if (event.key === 'ArrowUp') this.up();
         else if (event.key === 'ArrowLeft') this.left();
         else if (event.key === 'ArrowRight') this.right();
+        const best = localStorage.getItem('best');
+        const temp = best => best ? best < this.score : true;
+        if (temp(best)) localStorage.setItem('best', this.score);
+        this.best = localStorage.getItem('best');
       },
       create() {
         let count = 0;
